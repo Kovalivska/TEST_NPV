@@ -10,14 +10,22 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
     <style>
-        /* CSS for Bowtie Shapes */
-        .clip-path-trapezoid-left-1 { clip-path: polygon(0% 0%, 100% 15%, 100% 85%, 0% 100%); margin-right: -1px; }
-        .clip-path-trapezoid-left-2 { clip-path: polygon(0% 15%, 100% 30%, 100% 70%, 0% 85%); margin-right: -1px; }
-        .clip-path-trapezoid-left-3 { clip-path: polygon(0% 30%, 100% 42%, 100% 58%, 0% 70%); margin-right: -1px; }
+        /* CSS for Bowtie Shapes - WIDER CENTER (Less aggressive taper) */
+        /* Logic: Center neck gap increased from ~16% to ~24% height */
+        
+        /* Left 1: 0-100% -> 12-88% */
+        .clip-path-trapezoid-left-1 { clip-path: polygon(0% 0%, 100% 12%, 100% 88%, 0% 100%); margin-right: -1px; }
+        /* Left 2: 12-88% -> 25-75% */
+        .clip-path-trapezoid-left-2 { clip-path: polygon(0% 12%, 100% 25%, 100% 75%, 0% 88%); margin-right: -1px; }
+        /* Left 3: 25-75% -> 38-62% (Center Neck) */
+        .clip-path-trapezoid-left-3 { clip-path: polygon(0% 25%, 100% 38%, 100% 62%, 0% 75%); margin-right: -1px; }
 
-        .clip-path-trapezoid-right-1 { clip-path: polygon(0% 42%, 100% 30%, 100% 70%, 0% 58%); margin-left: -1px; }
-        .clip-path-trapezoid-right-2 { clip-path: polygon(0% 30%, 100% 15%, 100% 85%, 0% 70%); margin-left: -1px; }
-        .clip-path-trapezoid-right-3 { clip-path: polygon(0% 15%, 100% 0%, 100% 100%, 0% 85%); }
+        /* Right 1: Mirror of L3 */
+        .clip-path-trapezoid-right-1 { clip-path: polygon(0% 38%, 100% 25%, 100% 75%, 0% 62%); margin-left: -1px; }
+        /* Right 2: Mirror of L2 */
+        .clip-path-trapezoid-right-2 { clip-path: polygon(0% 25%, 100% 12%, 100% 88%, 0% 75%); margin-left: -1px; }
+        /* Right 3: Mirror of L1 */
+        .clip-path-trapezoid-right-3 { clip-path: polygon(0% 12%, 100% 0%, 100% 100%, 0% 88%); }
 
         .vertical-text-side { writing-mode: vertical-rl; transform: rotate(180deg); text-orientation: mixed; }
 
@@ -41,7 +49,7 @@
         }
         .animate-float { animation: float 6s ease-in-out infinite; }
         
-        /* Force Landscape/Fixed Ratio behavior even on mobile portrait */
+        /* Force Layout */
         #root {
             display: flex;
             align-items: center;
@@ -54,19 +62,14 @@
         .slide-container {
             width: 100%;
             max-width: 1200px;
-            aspect-ratio: 16/9; /* Enforce strict 16:9 ratio */
+            height: 100%; 
+            max-height: 100vh;
             position: relative;
             background: white;
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
             overflow: hidden;
             display: flex;
             flex-direction: column;
-        }
-        
-        @media (max-width: 768px) {
-            .slide-container {
-                width: 100vw;
-            }
         }
     </style>
 </head>
@@ -99,8 +102,14 @@
         const Info = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></IconBase>;
         const RefreshCw = (props) => <IconBase {...props}><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M8 16H3v5" /></IconBase>;
         const Box = (props) => <IconBase {...props}><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" /><polyline points="3.27 6.96 12 12.01 20.73 6.96" /><line x1="12" y1="22.08" x2="12" y2="12" /></IconBase>;
+        const Github = (props) => <IconBase {...props}><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></IconBase>;
+        const Linkedin = (props) => <IconBase {...props}><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" /></IconBase>;
+        const Globe = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10" /><line x1="2" x2="22" y1="12" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></IconBase>;
+        const Phone = (props) => <IconBase {...props}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></IconBase>;
+        const MessageSquare = (props) => <IconBase {...props}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></IconBase>;
 
-        // --- CONTENT DATA --- (Same as before)
+        // --- CONTENT DATA ---
+
         const deptData = {
             marketing: {
                 title: "Marketing & Demand Gen",
@@ -138,6 +147,30 @@
             "adoption": { name: "Adoption Rate", dept: "Customer Success", why: "Leading indicator of Retention.", formula: "(Active Users / Licenses) × 100", example: "<40% triggers Health Risk alert." },
             "nrr": { name: "Net Revenue Retention", dept: "Account Mgmt", why: "Sustainable growth > 100%.", formula: "((Start + Exp - Churn) / Start) × 100", example: "Focus on Upselling to offset Churn." }
         };
+
+        // Separate definitions for dashboard metrics to be clickable
+        const dashboardMetrics = {
+            "marketing_leads": { name: "Marketing Leads", dept: "Acquisition", why: "Volume indicator of funnel health.", formula: "Sum(New Leads)", example: "+12% Growth indicates campaign success." },
+            "cac": { name: "CAC Efficiency", dept: "Acquisition", why: "Cost effectiveness of acquisition.", formula: "Sales & Marketing Costs / New Customers", example: "Lower is better. Target <$400." },
+            "new_arr": { name: "New ARR (YTD)", dept: "Revenue", why: "Primary growth velocity metric.", formula: "Sum(ARR from New Business)", example: "98% to target is excellent." },
+            "win_rate_dash": { name: "Win Rate", dept: "Revenue", why: "Sales effectiveness.", formula: "Won / (Won + Lost)", example: "28% is healthy, but dipping slightly." },
+            "avg_deal": { name: "Avg Deal Size", dept: "Revenue", why: "Market segment indicator.", formula: "Total New ARR / # Deals", example: "Growing deal size means moving upmarket." },
+            "nrr_dash": { name: "Net Revenue Retention", dept: "Retention", why: "Growth from existing base.", formula: "(Start + Exp - Churn) / Start", example: "115% is world class." },
+            "churn_rate": { name: "Churn Rate (Logos)", dept: "Retention", why: "Customer attrition.", formula: "Lost Customers / Start Customers", example: "2.1% alert requires CS intervention." }
+        };
+
+        const execKpiDetails = {
+            "pipeline": { name: "Pipeline Coverage", dept: "Sales/Marketing", why: "Predictability metric. Tells leadership if there's enough raw opportunity to hit quota. < 3x is a critical risk.", formula: "Open Pipeline / Revenue Target", example: "3.5x Coverage means we can afford to lose some deals and still hit target." },
+            "win_rate_exec": { name: "Win Rate", dept: "Sales", why: "Efficiency metric. High win rates indicate strong Product-Market Fit and effective sales execution.", formula: "(Won Deals / Total Closed Deals) %", example: "Increasing Win Rate from 25% to 30% can add millions in revenue without adding leads." },
+            "sales_cycle_exec": { name: "Sales Cycle Length", dept: "Sales", why: "Velocity metric. Speed is money. Identifying friction in the buying process accelerates cash flow.", formula: "Avg(Close Date - Create Date)", example: "Dropping cycle from 90 to 60 days increases annual capacity by 33%." },
+            "nrr_exec": { name: "Net Revenue Retention (NRR)", dept: "Customer Success", why: "Health metric. NRR > 100% means the company grows even if sales stop selling. Key for valuation.", formula: "(Start ARR + Expansion - Churn) / Start ARR", example: "115% NRR is considered 'Best in Class' for SaaS." },
+            "arr_exec": { name: "New ARR", dept: "Sales", why: "Growth metric. The primary measure of new business velocity and market capture.", formula: "Sum(ARR of Closed Won Deals)", example: "Missing this target directly impacts company valuation and roadmap." }
+        };
+
+        const recommendationData = {
+            title: "Analyst Recommendation",
+            desc: "Acquisition is strong (3.5x pipeline), but Velocity is dragging. The 'Time-to-Live' metric has increased by 15%, delaying revenue recognition. We should prioritize automating the handoff from Sales to Pro Services (Dynamics → Project Tool) to reduce this friction."
+        }
 
         const techDetails = {
             "hubspot": {
@@ -180,14 +213,15 @@
         // --- APP ---
         const Presentation = () => {
           const [currentSlide, setCurrentSlide] = useState(1);
-          const totalSlides = 8;
+          const totalSlides = 9;
           const [activeModal, setActiveModal] = useState(null); 
           const [activeKpi, setActiveKpi] = useState(null);
           const [activeTech, setActiveTech] = useState(null);
+          const [activeRec, setActiveRec] = useState(false);
 
           const nextSlide = () => { setCurrentSlide(prev => Math.min(prev + 1, totalSlides)); resetModals(); }
           const prevSlide = () => { setCurrentSlide(prev => Math.max(prev - 1, 1)); resetModals(); }
-          const resetModals = () => { setActiveModal(null); setActiveKpi(null); setActiveTech(null); }
+          const resetModals = () => { setActiveModal(null); setActiveKpi(null); setActiveTech(null); setActiveRec(false); }
 
           useEffect(() => {
             const handleKeyDown = (e) => {
@@ -201,7 +235,7 @@
 
           return (
             <div className="slide-container rounded-none md:rounded-xl">
-                  {currentSlide !== 1 && currentSlide !== 8 && (
+                  {currentSlide !== 1 && currentSlide !== 9 && (
                     <div className="absolute top-0 left-0 w-full p-4 md:p-8 z-20 bg-white/90 backdrop-blur-sm border-b border-slate-100">
                         <SlideHeader slide={currentSlide} />
                     </div>
@@ -212,116 +246,135 @@
                         ${currentSlide === 4 ? 'scale-125 translate-x-[20%]' : ''} 
                         ${currentSlide === 5 ? 'scale-125 -translate-x-[20%]' : ''}
                         ${currentSlide === 7 ? 'opacity-30' : 'opacity-100'}
+                        pointer-events-none /* Ensures clicks pass through empty space */
                       `}>
+                         {/* Passed Department Click Handler + Show Depts logic inside component */}
                          <BowtieDiagram slide={currentSlide} onDeptClick={setActiveModal} />
                       </div>
                   )}
 
-                  {/* REMOVED PT-24 from wrapper to allow full positioning control in slide 6 */}
                   <div className="absolute inset-0 z-30 pointer-events-none">
-                     <SlideContent slide={currentSlide} onKpiClick={setActiveKpi} onTechClick={setActiveTech} />
+                     <SlideContent slide={currentSlide} onKpiClick={setActiveKpi} onTechClick={setActiveTech} onRecClick={() => setActiveRec(true)} />
                   </div>
 
-                  {/* MODALS */}
-                  {activeModal && deptData[activeModal] && (
+                  {/* MODALS - GENERAL LOGIC */}
+                  {(activeModal || activeKpi || activeTech || activeRec) && (
                       <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-fade-in-up px-4">
-                          <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8 max-w-lg w-full relative border-2 border-slate-100 max-h-[80vh] overflow-y-auto">
-                              <button onClick={() => setActiveModal(null)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-800 transition-colors"><X size={24} /></button>
-                              <div className="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
-                                  <div className="p-3 bg-slate-50 rounded-full">{deptData[activeModal].icon}</div>
-                                  <h2 className="text-xl md:text-2xl font-bold text-slate-800">{deptData[activeModal].title}</h2>
-                              </div>
-                              <div className="space-y-6">
-                                  {deptData[activeModal].sections.map((section, idx) => (
-                                      <div key={idx}>
-                                          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-2">{section.header}</h3>
-                                          <ul className="space-y-2">
-                                              {section.items.map((item, i) => (
-                                                  <li key={i} className="flex items-start gap-2 text-slate-700 font-medium text-sm md:text-base">
-                                                      <span className="mt-1.5 w-1.5 h-1.5 bg-blue-500 rounded-full shrink-0"></span>{item}
-                                                  </li>
-                                              ))}
-                                          </ul>
-                                      </div>
-                                  ))}
-                              </div>
-                              <div className="mt-8 text-center text-xs text-slate-400">Press ESC to close</div>
-                          </div>
-                      </div>
-                  )}
-
-                  {activeKpi && kpiDetails[activeKpi] && (
-                      <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm animate-fade-in-up px-4">
                           <div className="bg-white rounded-xl shadow-2xl p-0 max-w-lg w-full relative border border-slate-200 overflow-hidden max-h-[80vh] overflow-y-auto">
+                              {/* HEADER */}
                               <div className="bg-slate-50 p-6 border-b border-slate-100 flex justify-between items-start">
-                                  <div>
-                                      <div className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-1">{kpiDetails[activeKpi].dept}</div>
-                                      <h2 className="text-xl md:text-2xl font-bold text-slate-800">{kpiDetails[activeKpi].name}</h2>
-                                  </div>
-                                  <button onClick={() => setActiveKpi(null)} className="text-slate-400 hover:text-slate-800 transition-colors bg-white p-1 rounded-full shadow-sm"><X size={20} /></button>
-                              </div>
-                              <div className="p-6 space-y-6">
-                                  <div>
-                                      <div className="flex items-center gap-2 mb-2 text-slate-800 font-bold"><Lightbulb size={18} className="text-amber-500" /><h3>Why it matters</h3></div>
-                                      <p className="text-slate-600 text-sm leading-relaxed pl-7">{kpiDetails[activeKpi].why}</p>
-                                  </div>
-                                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                                      <div className="flex items-center gap-2 mb-2 text-blue-800 font-bold"><Calculator size={18} /><h3>Formula</h3></div>
-                                      <code className="text-blue-700 text-sm font-mono block pl-7 break-words">{kpiDetails[activeKpi].formula}</code>
-                                  </div>
-                                  <div>
-                                      <div className="flex items-center gap-2 mb-2 text-slate-800 font-bold"><Activity size={18} className="text-green-600" /><h3>Actionable Insight</h3></div>
-                                      <p className="text-slate-600 text-sm leading-relaxed pl-7 italic">"{kpiDetails[activeKpi].example}"</p>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  )}
-
-                  {activeTech && techDetails[activeTech] && (
-                      <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm animate-fade-in-up px-4">
-                          <div className="bg-white rounded-xl shadow-2xl p-0 max-w-3xl w-full relative border border-slate-200 overflow-hidden max-h-[90vh] overflow-y-auto">
-                              <div className="bg-slate-50 p-6 border-b border-slate-100 flex justify-between items-center">
-                                  <h2 className="text-xl md:text-2xl font-bold text-slate-800">{techDetails[activeTech].title}</h2>
-                                  <button onClick={() => setActiveTech(null)} className="text-slate-400 hover:text-slate-800 transition-colors"><X size={24} /></button>
-                              </div>
-                              <div className="p-4 md:p-8">
-                                  {techDetails[activeTech].isTable ? (
-                                      <div className="overflow-x-auto rounded-lg border border-slate-200">
-                                          <table className="w-full text-xs md:text-sm text-left">
-                                              <thead className="bg-slate-100 text-slate-500 font-bold uppercase text-[10px] md:text-xs">
-                                                  <tr>
-                                                      <th className="px-3 md:px-6 py-3 w-1/4">Mapping Factor</th>
-                                                      <th className="px-3 md:px-6 py-3 text-orange-600 w-1/3">HubSpot (Lead Gen)</th>
-                                                      <th className="px-3 md:px-6 py-3 text-blue-600 w-1/3">Dynamics (Sales)</th>
-                                                  </tr>
-                                              </thead>
-                                              <tbody className="divide-y divide-slate-100">
-                                                  {techDetails[activeTech].content.map((row, i) => (
-                                                      <tr key={i} className="bg-white hover:bg-slate-50">
-                                                          <td className="px-3 md:px-6 py-4 font-bold text-slate-700">{row.field}</td>
-                                                          <td className="px-3 md:px-6 py-4 text-slate-600">{row.hs}</td>
-                                                          <td className="px-3 md:px-6 py-4 text-slate-600">{row.dyn}</td>
-                                                      </tr>
-                                                  ))}
-                                              </tbody>
-                                          </table>
+                                  {activeModal && deptData[activeModal] && (
+                                      <div className="flex items-center gap-4">
+                                          <div className="p-3 bg-slate-50 rounded-full">{deptData[activeModal].icon}</div>
+                                          <h2 className="text-xl font-bold text-slate-800">{deptData[activeModal].title}</h2>
                                       </div>
-                                  ) : (
+                                  )}
+                                  {activeKpi && (kpiDetails[activeKpi] || execKpiDetails[activeKpi] || dashboardMetrics[activeKpi]) && (
+                                      <div>
+                                          <div className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-1">
+                                              {(kpiDetails[activeKpi] || execKpiDetails[activeKpi] || dashboardMetrics[activeKpi]).dept}
+                                          </div>
+                                          <h2 className="text-xl font-bold text-slate-800">{(kpiDetails[activeKpi] || execKpiDetails[activeKpi] || dashboardMetrics[activeKpi]).name}</h2>
+                                      </div>
+                                  )}
+                                  {activeTech && techDetails[activeTech] && (
+                                      <h2 className="text-xl font-bold text-slate-800">{techDetails[activeTech].title}</h2>
+                                  )}
+                                  {activeRec && (
+                                      <div className="flex items-center gap-3">
+                                          <AlertTriangle className="text-blue-600" />
+                                          <h2 className="text-xl font-bold text-slate-800">{recommendationData.title}</h2>
+                                      </div>
+                                  )}
+                                  <button onClick={resetModals} className="text-slate-400 hover:text-slate-800 transition-colors bg-white p-1 rounded-full shadow-sm"><X size={20} /></button>
+                              </div>
+
+                              {/* CONTENT */}
+                              <div className="p-6 space-y-6">
+                                  {/* DEPARTMENT CONTENT */}
+                                  {activeModal && deptData[activeModal] && (
                                       <div className="space-y-6">
-                                          <div className="flex items-start gap-4">
-                                              <div className="p-3 bg-blue-50 rounded-lg text-blue-600"><Database size={24} /></div>
+                                          {deptData[activeModal].sections.map((section, idx) => (
+                                              <div key={idx}>
+                                                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-2">{section.header}</h3>
+                                                  <ul className="space-y-2">
+                                                      {section.items.map((item, i) => (
+                                                          <li key={i} className="flex items-start gap-2 text-slate-700 font-medium text-sm">
+                                                              <span className="mt-1.5 w-1.5 h-1.5 bg-blue-500 rounded-full shrink-0"></span>{item}
+                                                          </li>
+                                                      ))}
+                                                  </ul>
+                                              </div>
+                                          ))}
+                                      </div>
+                                  )}
+
+                                  {/* KPI CONTENT (Unified for Slides 4, 5, 7, 8) */}
+                                  {activeKpi && (kpiDetails[activeKpi] || execKpiDetails[activeKpi] || dashboardMetrics[activeKpi]) && (
+                                      <>
+                                          <div>
+                                              <div className="flex items-center gap-2 mb-2 text-slate-800 font-bold"><Lightbulb size={18} className="text-amber-500" /><h3>Why it matters</h3></div>
+                                              <p className="text-slate-600 text-sm leading-relaxed pl-7">{(kpiDetails[activeKpi] || execKpiDetails[activeKpi] || dashboardMetrics[activeKpi]).why}</p>
+                                          </div>
+                                          <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                              <div className="flex items-center gap-2 mb-2 text-blue-800 font-bold"><Calculator size={18} /><h3>Formula</h3></div>
+                                              <code className="text-blue-700 text-sm font-mono block pl-7 break-words">{(kpiDetails[activeKpi] || execKpiDetails[activeKpi] || dashboardMetrics[activeKpi]).formula}</code>
+                                          </div>
+                                          { (kpiDetails[activeKpi] || execKpiDetails[activeKpi] || dashboardMetrics[activeKpi]).example && (
                                               <div>
-                                                  <h3 className="text-lg font-bold text-slate-800">Role in the Journey</h3>
-                                                  <p className="text-slate-600 mt-1 font-medium">{techDetails[activeTech].role}</p>
+                                                  <div className="flex items-center gap-2 mb-2 text-slate-800 font-bold"><Activity size={18} className="text-green-600" /><h3>Analyst Insight</h3></div>
+                                                  <p className="text-slate-600 text-sm leading-relaxed pl-7 italic">"{(kpiDetails[activeKpi] || execKpiDetails[activeKpi] || dashboardMetrics[activeKpi]).example}"</p>
+                                              </div>
+                                          )}
+                                      </>
+                                  )}
+
+                                  {/* TECH CONTENT */}
+                                  {activeTech && techDetails[activeTech] && (
+                                       techDetails[activeTech].isTable ? (
+                                          <div className="overflow-x-auto rounded-lg border border-slate-200">
+                                              <table className="w-full text-xs text-left">
+                                                  <thead className="bg-slate-100 text-slate-500 font-bold uppercase text-[10px]">
+                                                      <tr>
+                                                          <th className="px-3 py-3 w-1/4">Factor</th>
+                                                          <th className="px-3 py-3 text-orange-600 w-1/3">HubSpot</th>
+                                                          <th className="px-3 py-3 text-blue-600 w-1/3">Dynamics</th>
+                                                      </tr>
+                                                  </thead>
+                                                  <tbody className="divide-y divide-slate-100">
+                                                      {techDetails[activeTech].content.map((row, i) => (
+                                                          <tr key={i} className="bg-white hover:bg-slate-50">
+                                                              <td className="px-3 py-2 font-bold text-slate-700">{row.field}</td>
+                                                              <td className="px-3 py-2 text-slate-600">{row.hs}</td>
+                                                              <td className="px-3 py-2 text-slate-600">{row.dyn}</td>
+                                                          </tr>
+                                                      ))}
+                                                  </tbody>
+                                              </table>
+                                          </div>
+                                      ) : (
+                                          <div className="space-y-6">
+                                              <div>
+                                                  <h3 className="text-sm font-bold uppercase text-slate-400 mb-2">Description</h3>
+                                                  <p className="text-slate-700 leading-relaxed text-sm">{techDetails[activeTech].desc}</p>
+                                              </div>
+                                              <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 flex items-center gap-3">
+                                                  <Info className="text-blue-500" size={20} />
+                                                  <div>
+                                                      <span className="font-bold text-slate-800 block text-xs uppercase tracking-wide">Key Function</span>
+                                                      <span className="text-slate-600 text-sm">{techDetails[activeTech].key_function}</span>
+                                                  </div>
                                               </div>
                                           </div>
-                                          <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 flex items-center gap-3">
-                                              <Info className="text-blue-500" size={20} />
-                                              <div>
-                                                  <span className="font-bold text-slate-800 block text-xs uppercase tracking-wide">Key Function</span>
-                                                  <span className="text-slate-600 text-xs md:text-sm">{techDetails[activeTech].key_function}</span>
-                                              </div>
+                                      )
+                                  )}
+
+                                  {/* RECOMMENDATION CONTENT */}
+                                  {activeRec && (
+                                      <div>
+                                          <p className="text-slate-700 text-lg leading-relaxed">{recommendationData.desc}</p>
+                                          <div className="mt-6 p-4 bg-green-50 border-l-4 border-green-500 text-sm text-green-800">
+                                              <strong>Expected Outcome:</strong> Reduces time-to-value by 15% and increases NRR by 2% within Q3.
                                           </div>
                                       </div>
                                   )}
@@ -358,8 +411,9 @@
             { main: "Acquisition KPIs (Land)", sub: "Click KPIs for Formula & Logic" },
             { main: "Expansion KPIs (Expand)", sub: "Click KPIs for Formula & Logic" },
             { main: "Tech Stack & Data Sync", sub: "Click Icons/Sync for Data Mapping Proposal" },
-            { main: "Executive KPIs", sub: "Strategic Indicators" },
-            { main: "Ops Dashboard", sub: "Monthly Performance Review" },
+            { main: "Executive KPIs", sub: "Click Metrics for Management Context" },
+            { main: "Ops Dashboard", sub: "Interactive Performance Review (Click Metrics)" },
+            { main: "Contact & Portfolio", sub: "Svitlana Kovalivska" }
           ];
           return (
             <div>
@@ -372,7 +426,7 @@
         const DeptTag = ({ label, colorClass, delay, onClick }) => (
             <button 
                 onClick={onClick}
-                className={`absolute -top-3 md:-top-5 left-1/2 transform -translate-x-1/2 bg-white ${colorClass} border border-current px-2 md:px-3 py-1 md:py-1.5 rounded-full shadow-lg text-[8px] md:text-[10px] font-extrabold tracking-wide uppercase whitespace-nowrap z-40 animate-bounce-in hover:scale-110 hover:bg-slate-50 transition-all cursor-pointer flex items-center gap-1 group`} 
+                className={`absolute -top-3 md:-top-5 left-1/2 transform -translate-x-1/2 bg-white ${colorClass} border border-current px-2 md:px-3 py-1 md:py-1.5 rounded-full shadow-lg text-[8px] md:text-[10px] font-extrabold tracking-wide uppercase whitespace-nowrap z-40 animate-bounce-in hover:scale-110 hover:bg-slate-50 transition-all cursor-pointer flex items-center gap-1 group pointer-events-auto`} 
                 style={{animationDelay: delay}}
             >
                 {label}
@@ -413,7 +467,11 @@
                   </div>
                 </div>
 
-                <div className="w-6 md:w-10 bg-slate-800 self-center h-[28%] z-20 flex items-center justify-center shadow-xl">
+                {/* CENTRAL KNOT: WIDER GAP means this knot should be larger/taller to bridge them nicely? 
+                    Actually, clip-path logic implies the 'neck' is the gap. 
+                    I adjusted the clip-paths to make the connection WIDER vertically (e.g. 38%-62%). 
+                    Visually, the knot just sits on top. */}
+                <div className="w-6 md:w-10 bg-slate-800 self-center h-[32%] z-20 flex items-center justify-center shadow-xl">
                    <span className="text-white font-bold -rotate-90 text-[8px] md:text-[10px] tracking-wider whitespace-nowrap">CUSTOMER</span>
                 </div>
 
@@ -442,11 +500,11 @@
           );
         };
 
-        const SlideContent = ({ slide, onKpiClick, onTechClick }) => {
+        const SlideContent = ({ slide, onKpiClick, onTechClick, onRecClick }) => {
           if (slide === 1) {
             return (
-                <div className="w-full h-full flex flex-col items-center justify-center pointer-events-auto bg-slate-50 relative overflow-hidden pt-24">
-                    <div className="relative z-10 w-full max-w-5xl px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-8">
+                <div className="w-full h-full flex flex-col items-center justify-center pointer-events-auto bg-slate-50 relative overflow-hidden pt-24 pb-32 overflow-y-auto">
+                    <div className="relative z-10 w-full max-w-5xl px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-8 pb-10">
                         <div className="max-w-2xl text-center md:text-left animate-fade-in-up">
                             <div className="inline-block px-3 py-1 mb-4 md:mb-6 border border-blue-200 bg-blue-50 text-blue-700 rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-sm">
                                 Case Study
@@ -487,8 +545,8 @@
           }
           if (slide === 4) {
             return (
-              <div className="w-full h-full flex flex-col md:flex-row justify-start pl-4 md:pl-10 items-end pb-10 pointer-events-auto overflow-y-auto pt-24">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full md:w-[60%]">
+              <div className="w-full h-full flex flex-col md:flex-row justify-start pl-4 md:pl-10 items-end pb-32 pointer-events-auto overflow-y-auto pt-24">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full md:w-[60%] pb-10">
                   <KpiCard title="New Leads" value="Volume" desc="Total new contacts in CRM" metric="Cost Per Lead" onClick={() => onKpiClick('leads')} />
                   <KpiCard title="MQL Conversion" value="Efficiency" desc="Lead to MQL %" metric="Lead Scoring Quality" onClick={() => onKpiClick('mql_conv')} />
                   <KpiCard title="Win Rate" value="Velocity" desc="Closed Won / Total Closed" metric="Sales Cycle Days" onClick={() => onKpiClick('win_rate')} />
@@ -501,8 +559,8 @@
           }
           if (slide === 5) {
             return (
-              <div className="w-full h-full flex flex-col md:flex-row justify-end pr-4 md:pr-10 items-end pb-10 pointer-events-auto overflow-y-auto pt-24">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full md:w-[60%]">
+              <div className="w-full h-full flex flex-col md:flex-row justify-end pr-4 md:pr-10 items-end pb-32 pointer-events-auto overflow-y-auto pt-24">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full md:w-[60%] pb-10">
                   <KpiCard title="Time to Live" value="Velocity" desc="Contract to System Live" metric="On-time %" color="green" onClick={() => onKpiClick('time_to_live')} />
                   <KpiCard title="Adoption Rate" value="Impact" desc="Active Users / Total Lic." metric="Time to Value" color="green" onClick={() => onKpiClick('adoption')} />
                   <KpiCard title="NRR" value="Growth" desc="Net Revenue Retention" metric="Churn Rate" color="green" onClick={() => onKpiClick('nrr')} />
@@ -532,31 +590,21 @@
           }
           if (slide === 7) {
             return (
-              <div className="w-full h-full relative z-50">
+              <div className="w-full h-full relative z-50 pointer-events-auto">
                 <div className="absolute top-[35%] left-[25%] transform -translate-x-1/2 animate-fade-in-up" style={{animationDelay:'0.1s'}}>
-                    <BowtieKpi title="Pipeline Cov." value="3.5x" sub="Target: 3.0x" />
+                    <BowtieKpi title="Pipeline Cov." value="3.5x" sub="Target: 3.0x" onClick={() => onKpiClick('pipeline')} />
                 </div>
                 <div className="absolute top-[25%] left-[42%] transform -translate-x-1/2 animate-fade-in-up" style={{animationDelay:'0.2s'}}>
-                    <BowtieKpi title="Win Rate" value="28%" sub="+2% QoQ" highlight />
+                    <BowtieKpi title="Win Rate" value="28%" sub="+2% QoQ" highlight onClick={() => onKpiClick('win_rate_exec')} />
                 </div>
                 <div className="absolute top-[60%] left-[42%] transform -translate-x-1/2 animate-fade-in-up" style={{animationDelay:'0.3s'}}>
-                    <BowtieKpi title="Sales Cycle" value="45d" sub="-5d fast" />
+                    <BowtieKpi title="Sales Cycle" value="45d" sub="-5d fast" onClick={() => onKpiClick('sales_cycle_exec')} />
                 </div>
                 <div className="absolute top-[35%] left-[75%] transform -translate-x-1/2 animate-fade-in-up" style={{animationDelay:'0.4s'}}>
-                    <BowtieKpi title="NRR" value="115%" sub="Expansion" color="green" />
+                    <BowtieKpi title="NRR" value="115%" sub="Expansion" color="green" onClick={() => onKpiClick('nrr_exec')} />
                 </div>
                 <div className="absolute top-[15%] left-[85%] transform -translate-x-1/2 animate-fade-in-up" style={{animationDelay:'0.5s'}}>
-                    <BowtieKpi title="New ARR" value="$1.2M" sub="Growth" color="green" />
-                </div>
-                <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 w-[90%] md:w-3/4 bg-white/95 border border-blue-200 p-4 md:p-6 rounded-xl shadow-2xl flex items-start gap-4 animate-fade-in-up">
-                    <div className="p-3 bg-blue-100 rounded-full text-blue-600 hidden md:block"><AlertTriangle size={24} /></div>
-                    <div>
-                        <h4 className="font-bold text-slate-800 text-sm md:text-lg">Analyst Recommendation</h4>
-                        <p className="text-slate-600 mt-1 text-xs md:text-base">
-                            <strong>Acquisition is strong (3.5x pipeline), but Velocity is dragging.</strong> 
-                            We should prioritize automating the handoff from Sales to Pro Services.
-                        </p>
-                    </div>
+                    <BowtieKpi title="New ARR" value="$1.2M" sub="Growth" color="green" onClick={() => onKpiClick('arr_exec')} />
                 </div>
               </div>
             );
@@ -564,34 +612,31 @@
           if (slide === 8) {
              return (
                  <div className="w-full h-full bg-slate-50 pointer-events-auto p-4 md:p-8 pt-24 overflow-y-auto">
-                    <div className="absolute top-0 left-0 w-full p-4 md:p-8 z-20 bg-white border-b border-slate-100">
-                        <SlideHeader slide={slide} />
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mt-4 pb-20">
-                        <div className="col-span-1 md:col-span-4 flex flex-col gap-4">
-                            <h3 className="font-bold text-slate-500 uppercase tracking-wider text-xs mb-2">Acquisition Engine</h3>
-                            <DashboardWidget title="Marketing Leads" value="1,240" sub="+12% vs MoM" trend="up">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mt-4 pb-32">
+                        <div className="col-span-1 md:col-span-4 flex flex-col gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-full">
+                            <h3 className="font-bold text-slate-500 uppercase tracking-wider text-xs mb-2 border-b pb-2">Acquisition Engine</h3>
+                            <DashboardWidget title="Marketing Leads" value="1,240" sub="+12% vs MoM" trend="up" onClick={() => onKpiClick('marketing_leads')}>
                                 <SimpleBarChart data={[40, 50, 45, 60, 55, 70]} color="#C90025" />
                             </DashboardWidget>
-                            <DashboardWidget title="CAC Efficiency" value="$340" sub="Target: <$400" trend="good">
+                            <DashboardWidget title="CAC Efficiency" value="$340" sub="Target: <$400" trend="good" onClick={() => onKpiClick('cac')}>
                                 <div className="h-2 w-full bg-slate-100 rounded-full mt-2 overflow-hidden">
                                     <div className="h-full bg-green-500 w-[80%]"></div>
                                 </div>
                             </DashboardWidget>
                         </div>
-                        <div className="col-span-1 md:col-span-4 flex flex-col gap-4">
-                            <h3 className="font-bold text-slate-500 uppercase tracking-wider text-xs mb-2">Revenue Performance</h3>
-                            <DashboardWidget title="New ARR (YTD)" value="$4.2M" sub="98% of Target" trend="neutral">
+                        <div className="col-span-1 md:col-span-4 flex flex-col gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-full">
+                            <h3 className="font-bold text-slate-500 uppercase tracking-wider text-xs mb-2 border-b pb-2">Revenue Performance</h3>
+                            <DashboardWidget title="New ARR (YTD)" value="$4.2M" sub="98% of Target" trend="neutral" onClick={() => onKpiClick('new_arr')}>
                                 <SimpleLineChart data={[10, 25, 40, 55, 80, 98]} color="#2563eb" />
                             </DashboardWidget>
                              <div className="grid grid-cols-2 gap-4">
-                                <DashboardWidget title="Win Rate" value="28%" sub="-1%" trend="down" small />
-                                <DashboardWidget title="Avg Deal" value="$45k" sub="+5k" trend="up" small />
+                                <DashboardWidget title="Win Rate" value="28%" sub="-1%" trend="down" small onClick={() => onKpiClick('win_rate_dash')} />
+                                <DashboardWidget title="Avg Deal" value="$45k" sub="+5k" trend="up" small onClick={() => onKpiClick('avg_deal')} />
                             </div>
                         </div>
-                        <div className="col-span-1 md:col-span-4 flex flex-col gap-4">
-                            <h3 className="font-bold text-slate-500 uppercase tracking-wider text-xs mb-2">Customer Health</h3>
-                            <DashboardWidget title="Net Revenue Retention" value="115%" sub="World Class (>110%)" trend="up">
+                        <div className="col-span-1 md:col-span-4 flex flex-col gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-full">
+                            <h3 className="font-bold text-slate-500 uppercase tracking-wider text-xs mb-2 border-b pb-2">Customer Health</h3>
+                            <DashboardWidget title="Net Revenue Retention" value="115%" sub="World Class (>110%)" trend="up" onClick={() => onKpiClick('nrr_dash')}>
                                 <div className="flex items-end gap-1 h-16 mt-2">
                                     <div className="w-4 bg-green-200 h-[60%]"></div>
                                     <div className="w-4 bg-green-300 h-[70%]"></div>
@@ -599,7 +644,7 @@
                                     <div className="w-4 bg-green-600 h-[100%]"></div>
                                 </div>
                             </DashboardWidget>
-                            <DashboardWidget title="Churn Rate (Logos)" value="2.1%" sub="Alert: Increased in EU" trend="bad">
+                            <DashboardWidget title="Churn Rate (Logos)" value="2.1%" sub="Alert: Increased in EU" trend="bad" onClick={() => onKpiClick('churn_rate')}>
                                  <SimpleLineChart data={[1.8, 1.9, 1.8, 2.0, 2.1]} color="#C90025" />
                             </DashboardWidget>
                         </div>
@@ -607,22 +652,51 @@
                  </div>
              );
           }
+          if (slide === 9) {
+              return (
+                  <div className="w-full h-full flex flex-col items-center justify-center pointer-events-auto bg-slate-50 relative overflow-hidden pt-12 pb-32">
+                      <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl p-10 text-center border border-slate-200 relative overflow-hidden animate-fade-in-up">
+                          <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-teal-400"></div>
+                          <div className="mx-auto w-24 h-24 bg-gradient-to-br from-slate-700 to-slate-900 rounded-full flex items-center justify-center text-white text-3xl font-bold mb-6 shadow-xl">SK</div>
+                          <h2 className="text-3xl font-bold text-slate-900 mb-2">Svitlana Kovalivska</h2>
+                          <p className="text-blue-600 font-medium uppercase tracking-widest text-sm mb-8">RevOps Data Analyst</p>
+                          <div className="space-y-4">
+                              <a href="https://kovalivska.github.io/my-kpis_and_projects/My_KPIs_and_%D0%A1V5.html" target="_blank" className="flex items-center gap-4 p-4 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-100 hover:border-blue-200 transition-all group">
+                                  <div className="p-2 bg-white rounded-full text-slate-700 group-hover:text-blue-600 shadow-sm"><Globe size={20} /></div>
+                                  <div className="text-left"><div className="text-xs text-slate-400 font-bold uppercase">Portfolio</div><div className="text-slate-800 font-semibold group-hover:text-blue-700">View Projects & KPIs</div></div><ArrowRight size={16} className="ml-auto text-slate-300 group-hover:text-blue-400" />
+                              </a>
+                              <a href="mailto:kovalivska@gmail.com" className="flex items-center gap-4 p-4 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-100 hover:border-blue-200 transition-all group">
+                                  <div className="p-2 bg-white rounded-full text-slate-700 group-hover:text-blue-600 shadow-sm"><Mail size={20} /></div>
+                                  <div className="text-left"><div className="text-xs text-slate-400 font-bold uppercase">Email</div><div className="text-slate-800 font-semibold group-hover:text-blue-700">kovalivska@gmail.com</div></div>
+                              </a>
+                              <div className="flex gap-4">
+                                  <div className="flex-1 flex items-center justify-center gap-2 p-3 rounded-xl bg-slate-50 border border-slate-100 text-slate-700 font-medium"><Phone size={18} /><span>+49 1514 6320474</span></div>
+                                  <a href="https://www.linkedin.com/in/svitlana-kovalivska" target="_blank" className="flex-1 flex items-center justify-center gap-2 p-3 rounded-xl bg-slate-50 hover:bg-blue-50 border border-slate-100 hover:border-blue-200 transition-all text-slate-700 hover:text-blue-700 font-medium"><Linkedin size={18} /><span>LinkedIn</span></a>
+                                  <a href="https://github.com/Kovalivska" target="_blank" className="flex-1 flex items-center justify-center gap-2 p-3 rounded-xl bg-slate-50 hover:bg-slate-200 border border-slate-100 hover:border-slate-300 transition-all text-slate-700 hover:text-slate-900 font-medium"><Github size={18} /><span>GitHub</span></a>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              );
+          }
           return null;
         };
 
-        const BowtieKpi = ({ title, value, sub, color="blue", highlight=false }) => (
-            <div className={`bg-white px-2 md:px-4 py-1 md:py-2 rounded-lg shadow-xl border-l-4 ${color === 'green' ? 'border-green-500' : 'border-blue-500'} ${highlight ? 'scale-110 md:scale-125 ring-2 md:ring-4 ring-blue-100' : ''}`}>
-                <div className="text-[8px] md:text-[10px] text-slate-400 font-bold uppercase">{title}</div>
+        const BowtieKpi = ({ title, value, sub, color="blue", highlight=false, onClick }) => (
+            <button onClick={onClick} className={`bg-white px-2 md:px-4 py-1 md:py-2 rounded-lg shadow-xl border-l-4 ${color === 'green' ? 'border-green-500' : 'border-blue-500'} ${highlight ? 'scale-110 md:scale-125 ring-2 md:ring-4 ring-blue-100' : ''} hover:scale-110 transition-transform cursor-pointer text-left`}>
+                <div className="text-[8px] md:text-[10px] text-slate-400 font-bold uppercase flex items-center gap-1">
+                    {title} <Info size={10} />
+                </div>
                 <div className="text-base md:text-xl font-extrabold text-slate-800">{value}</div>
                 <div className="text-[8px] md:text-[10px] text-slate-500">{sub}</div>
-            </div>
+            </button>
         );
 
-        const DashboardWidget = ({ title, value, sub, trend, children, small }) => (
-            <div className={`bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between ${small ? 'h-24 md:h-32' : 'h-40 md:h-48'}`}>
-                <div>
-                    <div className="flex justify-between items-start">
-                        <span className="text-slate-500 font-medium text-xs uppercase truncate pr-2">{title}</span>
+        const DashboardWidget = ({ title, value, sub, trend, children, small, onClick }) => (
+            <button onClick={onClick} className={`text-left w-full bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between ${small ? 'h-24 md:h-32' : 'h-40 md:h-48'} hover:shadow-md hover:border-blue-200 transition-all cursor-pointer group`}>
+                <div className="w-full">
+                    <div className="flex justify-between items-start w-full">
+                        <span className="text-slate-500 font-medium text-xs uppercase truncate pr-2 group-hover:text-blue-600 transition-colors">{title}</span>
                         {trend === 'up' && <span className="text-green-500 bg-green-50 px-1.5 py-0.5 rounded text-[10px] font-bold">▲</span>}
                         {trend === 'down' && <span className="text-red-500 bg-red-50 px-1.5 py-0.5 rounded text-[10px] font-bold">▼</span>}
                         {trend === 'bad' && <span className="text-red-500 bg-red-50 px-1.5 py-0.5 rounded text-[10px] font-bold">!</span>}
@@ -633,7 +707,7 @@
                 <div className="w-full mt-2">
                     {children}
                 </div>
-            </div>
+            </button>
         );
 
         const SimpleBarChart = ({ data, color }) => (
