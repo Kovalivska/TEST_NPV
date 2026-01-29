@@ -11,14 +11,13 @@
     
     <style>
         /* CSS for Bowtie Shapes */
-        .clip-path-trapezoid-left-1 { clip-path: polygon(0% 0%, 100% 12%, 100% 88%, 0% 100%); margin-right: -1px; }
-        .clip-path-trapezoid-left-2 { clip-path: polygon(0% 12%, 100% 24%, 100% 76%, 0% 88%); margin-right: -1px; }
-        .clip-path-trapezoid-left-3 { clip-path: polygon(0% 24%, 100% 36%, 100% 64%, 0% 76%); margin-right: -1px; }
+        .clip-path-trapezoid-left-1 { clip-path: polygon(0% 0%, 100% 15%, 100% 85%, 0% 100%); margin-right: -1px; }
+        .clip-path-trapezoid-left-2 { clip-path: polygon(0% 15%, 100% 30%, 100% 70%, 0% 85%); margin-right: -1px; }
+        .clip-path-trapezoid-left-3 { clip-path: polygon(0% 30%, 100% 42%, 100% 58%, 0% 70%); margin-right: -1px; }
 
-        .clip-path-trapezoid-right-1 { clip-path: polygon(0% 36%, 100% 24%, 100% 76%, 0% 64%); margin-left: -1px; }
-        .clip-path-trapezoid-right-2 { clip-path: polygon(0% 24%, 100% 12%, 100% 88%, 0% 76%); margin-left: -1px; }
-        /* Fixed polygon points for the last segment */
-        .clip-path-trapezoid-right-3 { clip-path: polygon(0% 12%, 100% 0%, 100% 100%, 0% 88%); }
+        .clip-path-trapezoid-right-1 { clip-path: polygon(0% 42%, 100% 30%, 100% 70%, 0% 58%); margin-left: -1px; }
+        .clip-path-trapezoid-right-2 { clip-path: polygon(0% 30%, 100% 15%, 100% 85%, 0% 70%); margin-left: -1px; }
+        .clip-path-trapezoid-right-3 { clip-path: polygon(0% 15%, 100% 0%, 100% 100%, 0% 85%); }
 
         .vertical-text-side { writing-mode: vertical-rl; transform: rotate(180deg); text-orientation: mixed; }
 
@@ -42,11 +41,36 @@
         }
         .animate-float { animation: float 6s ease-in-out infinite; }
         
-        /* Mobile adjustments */
-        body { -webkit-font-smoothing: antialiased; }
+        /* Force Landscape/Fixed Ratio behavior even on mobile portrait */
+        #root {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            width: 100vw;
+            background-color: #f8fafc;
+            overflow: hidden;
+        }
+        .slide-container {
+            width: 100%;
+            max-width: 1200px;
+            aspect-ratio: 16/9; /* Enforce strict 16:9 ratio */
+            position: relative;
+            background: white;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @media (max-width: 768px) {
+            .slide-container {
+                width: 100vw;
+            }
+        }
     </style>
 </head>
-<body class="bg-slate-50">
+<body>
     <div id="root"></div>
 
     <script type="text/babel">
@@ -76,8 +100,7 @@
         const RefreshCw = (props) => <IconBase {...props}><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M8 16H3v5" /></IconBase>;
         const Box = (props) => <IconBase {...props}><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" /><polyline points="3.27 6.96 12 12.01 20.73 6.96" /><line x1="12" y1="22.08" x2="12" y2="12" /></IconBase>;
 
-        // --- CONTENT DATA ---
-
+        // --- CONTENT DATA --- (Same as before)
         const deptData = {
             marketing: {
                 title: "Marketing & Demand Gen",
@@ -177,13 +200,7 @@
           }, []);
 
           return (
-            <div className="flex flex-col h-screen w-full bg-slate-50 font-sans text-slate-800 overflow-hidden">
-              <div className="flex-grow relative flex items-center justify-center overflow-hidden p-4 md:p-8">
-                <div className={`transition-all duration-700 ease-in-out transform w-full max-w-6xl h-full md:aspect-video bg-white shadow-2xl rounded-xl relative overflow-hidden flex flex-col
-                  ${currentSlide === 1 ? 'shadow-none bg-slate-50' : 'shadow-2xl bg-white'}
-                  ${currentSlide === 4 ? 'scale-100 md:scale-110 md:translate-x-[20%]' : ''} 
-                  ${currentSlide === 5 ? 'scale-100 md:scale-110 md:-translate-x-[20%]' : ''}
-                `}>
+            <div className="slide-container rounded-none md:rounded-xl">
                   {currentSlide !== 1 && currentSlide !== 8 && (
                     <div className="absolute top-0 left-0 w-full p-4 md:p-8 z-20 bg-white/90 backdrop-blur-sm border-b border-slate-100">
                         <SlideHeader slide={currentSlide} />
@@ -191,16 +208,21 @@
                   )}
 
                   {currentSlide > 1 && currentSlide < 8 && (
-                      <div className={`absolute inset-0 flex items-center justify-center z-10 pt-16 md:pt-20 transition-opacity duration-500 ${currentSlide === 7 ? 'opacity-30' : 'opacity-100'}`}>
+                      <div className={`absolute inset-0 flex items-center justify-center z-10 pt-16 md:pt-20 transition-all duration-700 ease-in-out
+                        ${currentSlide === 4 ? 'scale-125 translate-x-[20%]' : ''} 
+                        ${currentSlide === 5 ? 'scale-125 -translate-x-[20%]' : ''}
+                        ${currentSlide === 7 ? 'opacity-30' : 'opacity-100'}
+                      `}>
                          <BowtieDiagram slide={currentSlide} onDeptClick={setActiveModal} />
                       </div>
                   )}
 
-                  <div className="absolute inset-0 z-30 pointer-events-none pt-24">
+                  {/* REMOVED PT-24 from wrapper to allow full positioning control in slide 6 */}
+                  <div className="absolute inset-0 z-30 pointer-events-none">
                      <SlideContent slide={currentSlide} onKpiClick={setActiveKpi} onTechClick={setActiveTech} />
                   </div>
 
-                  {/* MODAL: DEPARTMENTS (Slide 3) */}
+                  {/* MODALS */}
                   {activeModal && deptData[activeModal] && (
                       <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-fade-in-up px-4">
                           <div className="bg-white rounded-xl shadow-2xl p-6 md:p-8 max-w-lg w-full relative border-2 border-slate-100 max-h-[80vh] overflow-y-auto">
@@ -228,7 +250,6 @@
                       </div>
                   )}
 
-                  {/* MODAL: KPIs (Slide 4 & 5) */}
                   {activeKpi && kpiDetails[activeKpi] && (
                       <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm animate-fade-in-up px-4">
                           <div className="bg-white rounded-xl shadow-2xl p-0 max-w-lg w-full relative border border-slate-200 overflow-hidden max-h-[80vh] overflow-y-auto">
@@ -257,7 +278,6 @@
                       </div>
                   )}
 
-                  {/* MODAL: TECH STACK (Slide 6) */}
                   {activeTech && techDetails[activeTech] && (
                       <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm animate-fade-in-up px-4">
                           <div className="bg-white rounded-xl shadow-2xl p-0 max-w-3xl w-full relative border border-slate-200 overflow-hidden max-h-[90vh] overflow-y-auto">
@@ -265,7 +285,6 @@
                                   <h2 className="text-xl md:text-2xl font-bold text-slate-800">{techDetails[activeTech].title}</h2>
                                   <button onClick={() => setActiveTech(null)} className="text-slate-400 hover:text-slate-800 transition-colors"><X size={24} /></button>
                               </div>
-                              
                               <div className="p-4 md:p-8">
                                   {techDetails[activeTech].isTable ? (
                                       <div className="overflow-x-auto rounded-lg border border-slate-200">
@@ -287,9 +306,6 @@
                                                   ))}
                                               </tbody>
                                           </table>
-                                          <div className="mt-4 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 text-xs md:text-sm">
-                                              <strong>Proposal Summary:</strong> Implement a uni-directional sync for Leads (HS -> Dyn) to keep CRM clean, but a bi-directional sync for Status/Lifecycle to enable Closed-Loop Reporting for Marketing.
-                                          </div>
                                       </div>
                                   ) : (
                                       <div className="space-y-6">
@@ -299,10 +315,6 @@
                                                   <h3 className="text-lg font-bold text-slate-800">Role in the Journey</h3>
                                                   <p className="text-slate-600 mt-1 font-medium">{techDetails[activeTech].role}</p>
                                               </div>
-                                          </div>
-                                          <div>
-                                              <h3 className="text-sm font-bold uppercase text-slate-400 mb-2">Description</h3>
-                                              <p className="text-slate-700 leading-relaxed text-sm md:text-lg">{techDetails[activeTech].desc}</p>
                                           </div>
                                           <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 flex items-center gap-3">
                                               <Info className="text-blue-500" size={20} />
@@ -318,25 +330,22 @@
                       </div>
                   )}
 
-                </div>
-              </div>
-
-              {/* Navigation Bar */}
-              <div className="h-16 md:h-20 bg-slate-900 text-white flex items-center justify-between px-4 md:px-8 shadow-lg z-50 shrink-0">
-                <div className="flex flex-col">
-                  <span className="text-[10px] md:text-xs text-slate-400">CANDIDATE</span>
-                  <span className="text-sm md:text-base font-bold">Svitlana Kovalivska</span>
-                </div>
-                <div className="flex items-center gap-2 md:gap-4">
-                  <button onClick={prevSlide} disabled={currentSlide === 1} className="p-2 md:p-3 rounded-full hover:bg-slate-700 disabled:opacity-30 transition-colors"><ArrowLeft size={20} className="text-white"/></button>
-                  <span className="font-mono text-sm md:text-lg">{currentSlide} / {totalSlides}</span>
-                  <button onClick={nextSlide} disabled={currentSlide === totalSlides} className="p-2 md:p-3 rounded-full hover:bg-blue-600 bg-blue-700 disabled:opacity-30 transition-colors"><ArrowRight size={20} className="text-white"/></button>
-                </div>
-                <div className="flex flex-col items-end hidden md:flex">
-                  <span className="text-xs text-slate-400">CASE STUDY</span>
-                  <span className="font-bold text-blue-400">PTV LOGISTICS</span>
-                </div>
-              </div>
+                  {/* Navigation Bar */}
+                  <div className="h-16 md:h-20 bg-slate-900 text-white flex items-center justify-between px-4 md:px-8 shadow-lg z-50 shrink-0 mt-auto">
+                    <div className="flex flex-col">
+                      <span className="text-[10px] md:text-xs text-slate-400">CANDIDATE</span>
+                      <span className="text-sm md:text-base font-bold">Svitlana Kovalivska</span>
+                    </div>
+                    <div className="flex items-center gap-2 md:gap-4">
+                      <button onClick={prevSlide} disabled={currentSlide === 1} className="p-2 md:p-3 rounded-full hover:bg-slate-700 disabled:opacity-30 transition-colors"><ArrowLeft size={20} className="text-white"/></button>
+                      <span className="font-mono text-sm md:text-lg">{currentSlide} / {totalSlides}</span>
+                      <button onClick={nextSlide} disabled={currentSlide === totalSlides} className="p-2 md:p-3 rounded-full hover:bg-blue-600 bg-blue-700 disabled:opacity-30 transition-colors"><ArrowRight size={20} className="text-white"/></button>
+                    </div>
+                    <div className="flex flex-col items-end hidden md:flex">
+                      <span className="text-xs text-slate-400">CASE STUDY</span>
+                      <span className="font-bold text-blue-400">PTV LOGISTICS</span>
+                    </div>
+                  </div>
             </div>
           );
         };
@@ -360,7 +369,6 @@
           );
         };
 
-        // DeptTag
         const DeptTag = ({ label, colorClass, delay, onClick }) => (
             <button 
                 onClick={onClick}
@@ -376,14 +384,10 @@
           const isLeftFocus = slide === 4;
           const isRightFocus = slide === 5;
           const isTechSlide = slide === 6;
-          // SHOW DEPARTMENTS on Slides 3, 4, 5, AND 6 (Added slide 6 here)
           const showDepts = slide === 3 || slide === 4 || slide === 5 || slide === 6;
           
           return (
-            <div className={`relative w-[95%] md:w-[90%] h-[50%] md:h-[60%] transition-all duration-1000 ease-in-out
-              ${isLeftFocus ? 'scale-105 md:scale-125 origin-right translate-x-[5%] md:translate-x-[15%]' : ''}
-              ${isRightFocus ? 'scale-105 md:scale-125 origin-left -translate-x-[5%] md:-translate-x-[15%]' : ''}
-            `}>
+            <div className={`relative w-[95%] md:w-[90%] h-[50%] md:h-[60%] transition-all duration-1000 ease-in-out`}>
               <div className={`absolute left-0 top-0 bottom-0 w-8 md:w-16 bg-slate-600 flex items-center justify-center text-white font-bold vertical-text-side rounded-l-lg transition-opacity duration-500 ${isRightFocus ? 'opacity-20' : 'opacity-100'}`}><span className="tracking-widest text-[8px] md:text-base">PROBLEM</span></div>
               <div className={`absolute right-0 top-0 bottom-0 w-8 md:w-16 bg-slate-600 flex items-center justify-center text-white font-bold vertical-text-side rounded-r-lg transition-opacity duration-500 ${isLeftFocus ? 'opacity-20' : 'opacity-100'}`}><span className="tracking-widest text-[8px] md:text-base">SOLUTION</span></div>
 
@@ -441,30 +445,18 @@
         const SlideContent = ({ slide, onKpiClick, onTechClick }) => {
           if (slide === 1) {
             return (
-                <div className="w-full h-full flex flex-col items-center justify-center pointer-events-auto bg-slate-50 relative overflow-hidden">
-                    {/* Abstract Background Shapes */}
-                    <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-                        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[60%] bg-blue-100 rounded-full blur-3xl opacity-50 animate-pulse"></div>
-                        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[60%] bg-green-100 rounded-full blur-3xl opacity-50 animate-pulse" style={{animationDelay: '1s'}}></div>
-                        
-                        {/* Geometric Bowtie Hints */}
-                        <div className="absolute top-[20%] right-[10%] w-64 h-64 border border-slate-200 opacity-30 transform rotate-45 animate-float hidden md:block"></div>
-                    </div>
-
+                <div className="w-full h-full flex flex-col items-center justify-center pointer-events-auto bg-slate-50 relative overflow-hidden pt-24">
                     <div className="relative z-10 w-full max-w-5xl px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-8">
-                        {/* Text Content */}
                         <div className="max-w-2xl text-center md:text-left animate-fade-in-up">
                             <div className="inline-block px-3 py-1 mb-4 md:mb-6 border border-blue-200 bg-blue-50 text-blue-700 rounded-full text-xs md:text-sm font-bold uppercase tracking-wider shadow-sm">
                                 Case Study
                             </div>
-                            
                             <h1 className="text-4xl md:text-7xl font-extrabold text-slate-900 leading-tight tracking-tight mb-4 md:mb-6">
                                 Bowtie Metrics <br/>
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-500">
                                     & GTM Performance
                                 </span>
                             </h1>
-                            
                             <div className="flex flex-col md:flex-row items-center gap-4 mt-6 md:mt-8">
                                 <div className="h-1 w-20 md:h-12 md:w-1 bg-slate-300 rounded-full"></div>
                                 <div>
@@ -476,13 +468,9 @@
                                 </div>
                             </div>
                         </div>
-
-                        {/* Candidate Card */}
                         <div className="w-full max-w-sm backdrop-blur-xl bg-white/60 border border-white/50 p-6 md:p-8 rounded-2xl shadow-2xl transform md:rotate-2 md:hover:rotate-0 transition-transform duration-500 animate-fade-in-up" style={{animationDelay: '0.3s'}}>
                             <div className="mb-4 text-center md:text-left">
-                                <div className="mx-auto md:mx-0 w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg mb-4">
-                                    SK
-                                </div>
+                                <div className="mx-auto md:mx-0 w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-2xl font-bold shadow-lg mb-4">SK</div>
                                 <h3 className="text-xl font-bold text-slate-900">Svitlana Kovalivska</h3>
                                 <p className="text-blue-600 font-medium">RevOps Data Analyst</p>
                             </div>
@@ -499,7 +487,7 @@
           }
           if (slide === 4) {
             return (
-              <div className="w-full h-full flex flex-col md:flex-row justify-start pl-4 md:pl-10 items-end pb-10 pointer-events-auto overflow-y-auto">
+              <div className="w-full h-full flex flex-col md:flex-row justify-start pl-4 md:pl-10 items-end pb-10 pointer-events-auto overflow-y-auto pt-24">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full md:w-[60%]">
                   <KpiCard title="New Leads" value="Volume" desc="Total new contacts in CRM" metric="Cost Per Lead" onClick={() => onKpiClick('leads')} />
                   <KpiCard title="MQL Conversion" value="Efficiency" desc="Lead to MQL %" metric="Lead Scoring Quality" onClick={() => onKpiClick('mql_conv')} />
@@ -513,7 +501,7 @@
           }
           if (slide === 5) {
             return (
-              <div className="w-full h-full flex flex-col md:flex-row justify-end pr-4 md:pr-10 items-end pb-10 pointer-events-auto overflow-y-auto">
+              <div className="w-full h-full flex flex-col md:flex-row justify-end pr-4 md:pr-10 items-end pb-10 pointer-events-auto overflow-y-auto pt-24">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full md:w-[60%]">
                   <KpiCard title="Time to Live" value="Velocity" desc="Contract to System Live" metric="On-time %" color="green" onClick={() => onKpiClick('time_to_live')} />
                   <KpiCard title="Adoption Rate" value="Impact" desc="Active Users / Total Lic." metric="Time to Value" color="green" onClick={() => onKpiClick('adoption')} />
@@ -522,15 +510,10 @@
               </div>
             );
           }
-          // UPDATED SLIDE 6: Refined Layout & Interactivity
           if (slide === 6) {
             return (
               <div className="w-full h-full relative pointer-events-auto">
-                {/* Sync Logic Connector */}
-                <button 
-                    onClick={() => onTechClick('synclogic')}
-                    className="absolute top-[5%] md:top-[10%] left-[28%] w-[44%] md:w-[25%] group cursor-pointer z-50"
-                >
+                <button onClick={() => onTechClick('synclogic')} className="absolute top-[5%] md:top-[10%] left-[28%] w-[44%] md:w-[25%] group cursor-pointer z-50">
                     <div className="h-10 md:h-16 border-t-4 border-dashed border-slate-400 rounded-t-full opacity-50 group-hover:opacity-100 group-hover:border-blue-500 transition-all"></div>
                     <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-white p-2 shadow-xl border rounded-lg flex items-center gap-2 group-hover:scale-110 transition-transform">
                         <RefreshCw size={14} className="text-slate-600 group-hover:text-blue-600 group-hover:animate-spin" />
@@ -540,12 +523,10 @@
                         </div>
                     </div>
                 </button>
-                
-                {/* Tools Labels */}
-                <ToolLabel x="18%" y="85%" name="HubSpot" role="Marketing Auto" color="text-orange-600" onClick={() => onTechClick('hubspot')} />
-                <ToolLabel x="40%" y="85%" name="Dynamics 365" role="CRM / Sales" color="text-blue-600" onClick={() => onTechClick('dynamics')} />
-                <ToolLabel x="60%" y="85%" name="Zendesk" role="Support" color="text-green-700" onClick={() => onTechClick('zendesk')} />
-                <ToolLabel x="80%" y="85%" name="Chargebee" role="Billing" color="text-purple-600" onClick={() => onTechClick('chargebee')} />
+                <ToolLabel x="18%" y="75%" name="HubSpot" role="Marketing Auto" color="text-orange-600" onClick={() => onTechClick('hubspot')} />
+                <ToolLabel x="40%" y="75%" name="Dynamics 365" role="CRM / Sales" color="text-blue-600" onClick={() => onTechClick('dynamics')} />
+                <ToolLabel x="60%" y="75%" name="Zendesk" role="Support" color="text-green-700" onClick={() => onTechClick('zendesk')} />
+                <ToolLabel x="80%" y="75%" name="Chargebee" role="Billing" color="text-purple-600" onClick={() => onTechClick('chargebee')} />
               </div>
             );
           }
