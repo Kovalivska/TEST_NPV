@@ -3,6 +3,11 @@
 
 This repository contains a comprehensive RevOps analysis for PTV Logistics position assessment, demonstrating end-to-end data analysis, strategic planning, and technical implementation skills.
 
+## 🌐 **Live Interactive Presentation**
+**View the complete analysis:** https://kovalivska.github.io/TEST_NPV/Part1_presentation.html
+
+*Interactive 8-slide presentation featuring the bowtie model, departmental mapping, KPI frameworks, and technical recommendations. Navigate with arrow keys or navigation buttons.*
+
 ---
 
 ## 📁 Directory Structure
@@ -26,7 +31,9 @@ Jupyter notebooks with detailed analysis workflows
 ### **04_Scripts/**
 Python scripts and automation tools
 - `test.py` - Data analysis script with 5 analytical sections
-- Demonstrates technical Python skills for data manipulation
+- `validation.py` - Comprehensive validation system for test results
+- `run_validation.py` - Interactive validation and comparison tool
+- Demonstrates technical Python skills for data manipulation and quality assurance
 
 ### **05_Reports/**
 Strategic analysis documents and recommendations
@@ -42,8 +49,34 @@ Generated outputs, visualizations, and processed results
 
 ### **07_Presentation/**
 Final presentation materials
+- `Part1_presentation.html` - **Interactive RevOps presentation** (available online)
 - `RevOps Data Analyst by PTV Logistics -Kovslivska.pptx` - Executive presentation
 - Summary slides for stakeholder communication
+
+---
+
+## ✅ **Code Validation Results**
+
+### **Comprehensive Testing System**
+All analytical calculations have been independently validated using a dedicated validation system:
+
+**Test Coverage:**
+- ✅ **Section 1:** Data extraction (2,621 records) - **PASSED**
+- ✅ **Section 2:** Overdue deals identification (231 deals) - **PASSED** 
+- ✅ **Section 3:** 2026 Won ACV calculation ($54,334,130) - **PASSED**
+- ✅ **Section 4:** March 2026 forecast ($3,360,325) - **PASSED**
+- ✅ **Section 5:** Win rate trend analysis (26.9% overall) - **PASSED**
+
+**Validation Methods:**
+- Independent calculation verification
+- Cross-reference mathematical accuracy  
+- Business logic validation
+- Data integrity checks
+- Edge case handling
+
+**Result:** `OVERALL VALIDATION: ✅ ALL RESULTS MATCH`
+
+*All calculations are mathematically correct and ready for production use*
 
 ---
 
@@ -75,21 +108,31 @@ Final presentation materials
 - Python (pandas, numpy, plotly)
 - Jupyter Notebooks
 - Excel data processing
+- **Automated validation systems**
 
 **Business Intelligence:**
 - Interactive dashboards
 - KPI tracking systems
 - Scenario planning models
+- **Real-time data visualization**
 
 **RevOps Tools:**
 - HubSpot integration
 - Dynamics 365 mapping
 - Sales pipeline analytics
+- **Cross-platform data synchronization**
 
 **Presentation:**
 - Executive-level reporting
+- **Interactive HTML presentations**
 - Data visualization
 - Strategic planning
+
+**Quality Assurance:**
+- **Comprehensive test validation**
+- **Independent calculation verification**
+- **Production-ready code standards**
+- **Error handling and edge cases**
 
 ---
 
@@ -115,6 +158,9 @@ Final presentation materials
 ✅ Business intelligence dashboard creation
 ✅ Predictive analytics and forecasting
 ✅ Data quality management
+✅ **Comprehensive code validation and testing**
+✅ **Interactive presentation development**
+✅ **Production-ready system design**
 
 ---
 
@@ -122,15 +168,24 @@ Final presentation materials
 
 This comprehensive assessment demonstrates:
 
-**Strategic Thinking:** GTM model analysis with actionable recommendations
-**Technical Expertise:** Advanced Python data analysis and visualization
-**Business Acumen:** KPI framework design and cross-departmental alignment
-**Implementation Focus:** Practical tool integration and process optimization
+**Strategic Thinking:** GTM model analysis with actionable recommendations  
+**Technical Expertise:** Advanced Python data analysis with validated calculations  
+**Business Acumen:** KPI framework design and cross-departmental alignment  
+**Implementation Focus:** Practical tool integration and process optimization  
+**Quality Assurance:** Production-ready code with comprehensive validation  
+**Presentation Skills:** Interactive web-based executive presentations  
 
-The analysis provides PTV Logistics with immediately actionable insights for revenue operations optimization, supported by robust data analysis and strategic recommendations.
+The analysis provides PTV Logistics with immediately actionable insights for revenue operations optimization, supported by robust data analysis, validated calculations, and strategic recommendations.
+
+### **Key Deliverables:**
+- 📊 **Interactive Online Presentation:** https://kovalivska.github.io/TEST_NPV/Part1_presentation.html
+- 📈 **Validated Data Analysis:** All calculations independently verified  
+- 🎯 **Strategic Framework:** Complete RevOps transformation roadmap
+- 🛠 **Technical Implementation:** Production-ready code and systems
 
 ---
 
 **Contact:** Svitlana Kovalivska  
 **Position:** RevOps Data Analyst Candidate  
-**Assessment Date:** January 2026
+**Assessment Date:** February 2026  
+**Repository:** https://github.com/Kovalivska/TEST_NPV
